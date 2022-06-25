@@ -1,0 +1,30 @@
+{
+  "name": "clearvoter-server",
+  "version": "1.0.0",
+  "description": "ClearVoter is an electronic voting (e-voting) platform that allows individuals or brands create polls in order to get the choice, opinion, or will on a question; from a target audience or a group of persons.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "e-voting",
+    "voting",
+    "polling"
+  ],
+  "author": "Bonaventure Chukwudi",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-async-handler": "^1.2.0",
+    "joi": "^17.6.0",
+    "mongoose": "^6.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.18"
+  }
+}
