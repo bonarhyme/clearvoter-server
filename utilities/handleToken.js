@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 const jwt = require("jsonwebtoken");
 const tokenHandler = {};
 const secret = process.env.JWT_SECRET;
@@ -17,9 +18,7 @@ tokenHandler.decodeToken = (token) => {
     return jwt.verify(token, secret);
   } catch (error) {
     res.status(422);
-    throw new Error(
-      "Invalid token detected or token has expired. Please restart the process again."
-    );
+    throw new Error(error);
   }
 };
 

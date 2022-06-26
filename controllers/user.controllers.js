@@ -74,4 +74,37 @@ user.login = asyncHandler(async (req, res) => {
   }
 });
 
+user.verifyEmail = asyncHandler(async (req, res) => {
+  const token = req.params.token;
+
+  try {
+    const { fieldToSecure } = tokenHandler.decodeToken(token);
+
+    const validUser = await UserModel.findOne({ email: fieldToSecure });
+
+    if (!validUser) {
+      res.status(400);
+      throw new Error("Invalid token or email");
+    }
+
+    validUser.isVerified = true;
+    const verified = await validUser.save();
+
+    if (!verified) {
+      res.status(500);
+      throw new Error(
+        "We were unable to verify your account at the moment. Please try again."
+      );
+    }
+
+    successResponse(res, 202, "Account has been verified successfully.");
+  } catch (error) {
+    console.log({ error: error.message });
+    res.status(500);
+    throw new Error(
+      error.message.replace("JsonWebTokenError:", "").replace("jwt", "token")
+    );
+  }
+});
+
 module.exports = user;

@@ -7,5 +7,6 @@ const routes = require("express").Router();
 
 routes.post("/register", validation.register, user.register);
 routes.post("/login", validation.login, user.login);
+routes.put("/verify-email/:token", user.verifyEmail);
 
 module.exports = routes;
