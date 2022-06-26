@@ -18,7 +18,9 @@ user.register = asyncHandler(async (req, res) => {
       throw new Error("Email is already taken.");
     }
 
-    const usernameTaken = await UserModel.findOne({ username });
+    const usernameTaken = await UserModel.findOne({
+      username: username.trim(),
+    });
 
     if (usernameTaken) {
       res.status(400);
@@ -26,9 +28,9 @@ user.register = asyncHandler(async (req, res) => {
     }
 
     const newUser = await UserModel.create({
-      email,
-      username,
-      password,
+      email: email.trim(),
+      username: username.trim(),
+      password: password.trim(),
     });
 
     if (newUser) {
@@ -54,7 +56,9 @@ user.login = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const usernameTaken = await UserModel.findOne({ username });
+    const usernameTaken = await UserModel.findOne({
+      username: username.trim(),
+    });
 
     if (
       !usernameTaken ||
