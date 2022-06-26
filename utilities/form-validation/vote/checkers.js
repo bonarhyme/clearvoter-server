@@ -27,11 +27,13 @@ checkers.targetLocation = Joi.string().min(2).messages({
   "string.min": "A location must have a minimum of two characters",
 });
 
-checkers.partyName = Joi.string().min(2).messages({
+checkers.partyName = Joi.string().required().min(2).messages({
   "string.min": "Party name must have a minimum of two characters",
+  "any.required": "Enter a party name",
 });
-checkers.partyDescription = Joi.string().min(2).messages({
-  "string.min": "Party name must have a minimum of two characters",
+checkers.partyDescription = Joi.string().required().min(10).messages({
+  "string.min": "Party description must have a minimum of ten characters",
+  "any.required": "Enter a party description",
 });
 
 module.exports = checkers;

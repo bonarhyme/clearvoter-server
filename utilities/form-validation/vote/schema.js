@@ -9,4 +9,9 @@ schema.createPoll = Joi.object({
   expiration: checkers.expiration,
 });
 
+schema.addParty = Joi.object({
+  name: checkers.partyName,
+  description: checkers.description,
+});
+
 module.exports = schema;

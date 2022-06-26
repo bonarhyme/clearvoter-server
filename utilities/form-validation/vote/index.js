@@ -15,5 +15,6 @@ validation._callable = (schemaName) =>
   });
 
 validation.createPoll = validation._callable("createPoll");
+validation.addParty = validation._callable("addParty");
 
 module.exports = validation;

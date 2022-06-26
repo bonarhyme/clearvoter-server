@@ -34,4 +34,33 @@ vote.createPoll = asyncHandler(async (req, res) => {
   }
 });
 
+vote.addParty = asyncHandler(async (req, res) => {
+  const slug = req.params.slug;
+  const { name, description } = req.body;
+
+  try {
+    const poll = await VoteModel.updateOne(
+      { slug },
+      {
+        $push: {
+          parties: {
+            name,
+            description,
+          },
+        },
+      }
+    );
+
+    if (!poll) {
+      res.status(400);
+      throw new Error("The party was not added. Please try again");
+    }
+
+    responseHandle.successResponse(res, 201, "Party was added successfully.");
+  } catch (error) {
+    res.status(500);
+    throw new Error(error);
+  }
+});
+
 module.exports = vote;
