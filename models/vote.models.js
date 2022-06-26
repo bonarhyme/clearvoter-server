@@ -18,7 +18,6 @@ const partiesSchema = mongoose.Schema({
 const targetLocationSchema = mongoose.Schema({
   location: {
     type: String,
-    default: "global",
     unique: true,
   },
 });

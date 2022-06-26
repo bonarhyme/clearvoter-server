@@ -14,4 +14,8 @@ schema.addParty = Joi.object({
   description: checkers.description,
 });
 
+schema.addLocation = Joi.object({
+  location: checkers.targetLocation,
+});
+
 module.exports = schema;

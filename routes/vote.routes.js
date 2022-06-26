@@ -7,5 +7,6 @@ const routes = require("express").Router();
 
 routes.post("/create", validation.createPoll, vote.createPoll);
 routes.put("/add-party/:slug", validation.addParty, vote.addParty);
+routes.put("/add-location/:slug", validation.addLocation, vote.addLocation);
 
 module.exports = routes;

@@ -39,6 +39,15 @@ vote.addParty = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
 
   try {
+    const checkPartyAdded = await VoteModel.findOne({
+      slug,
+      "parties.name": name,
+    });
+
+    if (checkPartyAdded) {
+      res.status(400);
+      throw new Error("Added the Party already");
+    }
     const poll = await VoteModel.updateOne(
       { slug },
       {
@@ -57,6 +66,47 @@ vote.addParty = asyncHandler(async (req, res) => {
     }
 
     responseHandle.successResponse(res, 201, "Party was added successfully.");
+  } catch (error) {
+    res.status(500);
+    throw new Error(error);
+  }
+});
+
+vote.addLocation = asyncHandler(async (req, res) => {
+  const slug = req.params.slug;
+  const { location } = req.body;
+
+  try {
+    const checkLocationAdded = await VoteModel.findOne({
+      slug,
+      "targetLocations.location": location,
+    });
+
+    if (checkLocationAdded) {
+      res.status(400);
+      throw new Error("Added the location already");
+    }
+    const poll = await VoteModel.updateOne(
+      { slug },
+      {
+        $push: {
+          targetLocations: {
+            location,
+          },
+        },
+      }
+    );
+
+    if (!poll) {
+      res.status(400);
+      throw new Error("The location was not added. Please try again");
+    }
+
+    responseHandle.successResponse(
+      res,
+      201,
+      "Location was added successfully."
+    );
   } catch (error) {
     res.status(500);
     throw new Error(error);

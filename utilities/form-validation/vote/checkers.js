@@ -23,8 +23,9 @@ checkers.expiration = Joi.string().required().messages({
   "any.required": "Please enter a valid date.",
 });
 
-checkers.targetLocation = Joi.string().min(2).messages({
+checkers.targetLocation = Joi.string().required().min(2).messages({
   "string.min": "A location must have a minimum of two characters",
+  "any.required": "Please enter a valid location.",
 });
 
 checkers.partyName = Joi.string().required().min(2).messages({
