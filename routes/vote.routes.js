@@ -22,5 +22,7 @@ routes.put(
   validation.addLocation,
   vote.addLocation
 );
+routes.put("/publish/:slug", protectUser, protectPoll, vote.publishPoll);
+routes.put("/end-poll/:slug", protectUser, protectPoll, vote.endPoll);
 
 module.exports = routes;

@@ -117,4 +117,58 @@ vote.addLocation = asyncHandler(async (req, res) => {
   }
 });
 
+vote.publishPoll = asyncHandler(async (req, res) => {
+  const slug = req.params.slug;
+
+  try {
+    const poll = await VoteModel.updateOne(
+      { slug },
+      {
+        draft: false,
+      }
+    );
+
+    if (!poll) {
+      res.status(400);
+      throw new Error("An error occured. It seems like your link is broken.");
+    }
+
+    responseHandle.successResponse(
+      res,
+      201,
+      "The poll has been published and you can now share the link."
+    );
+  } catch (error) {
+    res.status(500);
+    throw new Error(error);
+  }
+});
+
+vote.endPoll = asyncHandler(async (req, res) => {
+  const slug = req.params.slug;
+
+  try {
+    const poll = await VoteModel.updateOne(
+      { slug },
+      {
+        endVoting: true,
+      }
+    );
+
+    if (!poll) {
+      res.status(400);
+      throw new Error("An error occured. It seems like your link is broken.");
+    }
+
+    responseHandle.successResponse(
+      res,
+      201,
+      "The poll has been closed. Results can only be viewed."
+    );
+  } catch (error) {
+    res.status(500);
+    throw new Error(error);
+  }
+});
+
 module.exports = vote;
