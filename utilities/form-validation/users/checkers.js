@@ -43,4 +43,16 @@ checkers.name = Joi.string().required().min(3).max(40).messages({
   "any.required": "Please enter a valid name.",
 });
 
+checkers.loginPassword = Joi.string().required().messages({
+  "string.empty": "Your password cannot be an empty field",
+  "any.required": "Please enter your password",
+});
+
+checkers.loginUsername = Joi.string().required().alphanum().messages({
+  "string.empty": "Your username cannot be an empty field",
+  "string.alphanum":
+    "Your username must contain only alphabets and/or numbers.",
+  "any.required": "Please enter a valid username.",
+});
+
 module.exports = checkers;

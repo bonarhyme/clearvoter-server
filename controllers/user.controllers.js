@@ -50,4 +50,28 @@ user.register = asyncHandler(async (req, res) => {
   }
 });
 
+user.login = asyncHandler(async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const usernameTaken = await UserModel.findOne({ username });
+
+    if (
+      !usernameTaken ||
+      (await usernameTaken.matchPassword(password)) === false
+    ) {
+      res.status(400);
+      throw new Error("Invalid username or password");
+    }
+
+    successResponse(res, "200", "Login success", {
+      username: usernameTaken.username,
+      token: tokenHandler.generateToken(username),
+    });
+  } catch (error) {
+    res.status(500);
+    throw new Error(error);
+  }
+});
+
 module.exports = user;

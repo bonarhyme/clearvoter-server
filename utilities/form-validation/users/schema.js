@@ -9,4 +9,9 @@ schema.register = Joi.object({
   password: checkers.password,
 });
 
+schema.login = Joi.object({
+  username: checkers.loginUsername,
+  password: checkers.loginPassword,
+});
+
 module.exports = schema;
