@@ -7,6 +7,7 @@ schema.createPoll = Joi.object({
   title: checkers.title,
   description: checkers.description,
   expiration: checkers.expiration,
+  allowVpn: checkers.allowVpn,
 });
 
 schema.addParty = Joi.object({

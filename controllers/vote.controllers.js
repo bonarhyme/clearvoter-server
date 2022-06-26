@@ -1,3 +1,4 @@
+const axios = require("axios");
 const asyncHandler = require("express-async-handler");
 const VoteModel = require("../models/vote.models");
 const responseHandle = require("../utilities/handleResponse");
@@ -5,7 +6,7 @@ const responseHandle = require("../utilities/handleResponse");
 const vote = {};
 
 vote.createPoll = asyncHandler(async (req, res) => {
-  const { title, description, expiration } = req.body;
+  const { title, description, expiration, allowVpn } = req.body;
 
   try {
     const isTitleTaken = await VoteModel.findOne({ title: title.trim() });
@@ -22,6 +23,7 @@ vote.createPoll = asyncHandler(async (req, res) => {
         id: req.user._id,
         username: req.user.username,
       },
+      allowVpn,
     });
 
     if (!poll) {
@@ -167,6 +169,92 @@ vote.endPoll = asyncHandler(async (req, res) => {
     );
   } catch (error) {
     res.status(500);
+    throw new Error(error);
+  }
+});
+
+// This uses the abstract api to check the ip address of the voter and confirm their validity to vote in a particular poll without saving their ip address. It also checks to see if a poll has expired or ended by the creator.
+
+vote.addVote = asyncHandler(async (req, res) => {
+  const slug = req.params.slug;
+  const selectionId = req.params.selectionId;
+
+  try {
+    // Check if poll is still valid or ended or expired
+    const poll = await VoteModel.findOne({
+      slug,
+      expiration: {
+        $gte: Date.now(),
+      },
+      endVoting: false,
+    });
+
+    if (!poll) {
+      res.status(400);
+      throw new Error("Poll has either expired or has been closed");
+    }
+
+    // Check voter details
+    const { data } = await axios.get(
+      "https://ipgeolocation.abstractapi.com/v1/?api_key=9b381ad3ef47424d8c935fd3b34a1bab"
+    );
+
+    if (poll.allowVpn === false && data.security.is_vpn === true) {
+      res.status(401);
+      throw new Error("It seems that you use a vpn. Turn it off to vote.");
+    }
+
+    // Check if user location is allowed to vote
+    if (
+      poll.targetLocations.length > 0 &&
+      poll.targetLocations.findIndex(
+        (x) => x.location.toLowerCase() === data.country.toLowerCase()
+      ) === -1
+    ) {
+      res.status(401);
+      throw new Error(
+        "People from your current location cannot vote in this poll."
+      );
+    }
+
+    // Check if party user selected to vote exits
+    const findParty = poll.parties.find(
+      (x) => x._id.toString() === selectionId.toString()
+    );
+
+    if (!findParty) {
+      res.status(400);
+      throw new error("Invalid party selected.");
+    }
+
+    // Check if voters for party is greater than 0 and also check if user has voted for the party already
+    if (
+      findParty.voters.length > 0 &&
+      findParty.voters.findIndex((x) => x === data.ip_address)
+    ) {
+      res.status(400);
+      throw new Error("You already voted in this poll.");
+    }
+
+    // Update the vote count
+    const vote = await VoteModel.updateOne(
+      { slug, "parties._id": selectionId },
+      {
+        $push: {
+          "parties.$.voters": data.ip_address,
+        },
+      }
+    );
+
+    if (!vote) {
+      res.status(500);
+      throw new Error(
+        "An error occured. Your vote was not registered. Please try again."
+      );
+    }
+
+    responseHandle.successResponse(res, 201, "Poll casted successfully", data);
+  } catch (error) {
     throw new Error(error);
   }
 });

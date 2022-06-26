@@ -9,16 +9,12 @@ const partiesSchema = mongoose.Schema({
   description: {
     type: String,
   },
-  count: {
-    type: Number,
-    default: 0,
-  },
+  voters: [String],
 });
 
 const targetLocationSchema = mongoose.Schema({
   location: {
     type: String,
-    unique: true,
   },
 });
 
@@ -35,6 +31,10 @@ const voteSchema = mongoose.Schema(
     description: {
       type: String,
       required: true,
+    },
+    allowVpn: {
+      type: Boolean,
+      default: true,
     },
     targetLocations: [targetLocationSchema],
     parties: [partiesSchema],

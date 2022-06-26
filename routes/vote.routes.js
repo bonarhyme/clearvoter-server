@@ -24,5 +24,6 @@ routes.put(
 );
 routes.put("/publish/:slug", protectUser, protectPoll, vote.publishPoll);
 routes.put("/end-poll/:slug", protectUser, protectPoll, vote.endPoll);
+routes.put("/vote/:slug/:selectionId", vote.addVote);
 
 module.exports = routes;

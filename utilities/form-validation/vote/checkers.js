@@ -37,4 +37,6 @@ checkers.partyDescription = Joi.string().required().min(10).messages({
   "any.required": "Enter a party description",
 });
 
+checkers.allowVpn = Joi.boolean();
+
 module.exports = checkers;
