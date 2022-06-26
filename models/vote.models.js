@@ -54,7 +54,7 @@ const voteSchema = mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
-      name: {
+      username: {
         type: String,
       },
     },

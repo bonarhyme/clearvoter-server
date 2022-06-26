@@ -18,6 +18,10 @@ vote.createPoll = asyncHandler(async (req, res) => {
       title: title.trim(),
       description: description.trim(),
       expiration,
+      creator: {
+        id: req.user._id,
+        username: req.user.username,
+      },
     });
 
     if (!poll) {
