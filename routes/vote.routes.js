@@ -1,3 +1,4 @@
+const { Router } = require("express");
 const vote = require("../controllers/vote.controllers");
 const protectPoll = require("../middleware/spamCheck");
 const protectUser = require("../middleware/userMiddleware");
@@ -25,5 +26,6 @@ routes.put(
 routes.put("/publish/:slug", protectUser, protectPoll, vote.publishPoll);
 routes.put("/end-poll/:slug", protectUser, protectPoll, vote.endPoll);
 routes.put("/vote/:slug/:selectionId", vote.addVote);
+routes.get("/view-poll/:slug", vote.getPoll);
 
 module.exports = routes;

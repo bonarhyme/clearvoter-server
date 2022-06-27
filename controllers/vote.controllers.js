@@ -168,7 +168,6 @@ vote.endPoll = asyncHandler(async (req, res) => {
       "The poll has been closed. Results can only be viewed."
     );
   } catch (error) {
-    res.status(500);
     throw new Error(error);
   }
 });
@@ -194,6 +193,16 @@ vote.addVote = asyncHandler(async (req, res) => {
       throw new Error("Poll has either expired or has been closed");
     }
 
+    // Check if party user selected to vote exits
+    const findParty = poll.parties.find(
+      (x) => x._id.toString() === selectionId.toString()
+    );
+
+    if (!findParty) {
+      res.status(400);
+      throw new Error("Invalid party selected.");
+    }
+
     // Check voter details
     const { data } = await axios.get(
       "https://ipgeolocation.abstractapi.com/v1/?api_key=9b381ad3ef47424d8c935fd3b34a1bab"
@@ -217,16 +226,6 @@ vote.addVote = asyncHandler(async (req, res) => {
       );
     }
 
-    // Check if party user selected to vote exits
-    const findParty = poll.parties.find(
-      (x) => x._id.toString() === selectionId.toString()
-    );
-
-    if (!findParty) {
-      res.status(400);
-      throw new error("Invalid party selected.");
-    }
-
     // Check if voters for party is greater than 0 and also check if user has voted for the party already
     if (
       findParty.voters.length > 0 &&
@@ -243,6 +242,9 @@ vote.addVote = asyncHandler(async (req, res) => {
         $push: {
           "parties.$.voters": data.ip_address,
         },
+        $inc: {
+          "parties.$.voteCount": 1,
+        },
       }
     );
 
@@ -253,7 +255,29 @@ vote.addVote = asyncHandler(async (req, res) => {
       );
     }
 
-    responseHandle.successResponse(res, 201, "Poll casted successfully", data);
+    responseHandle.successResponse(res, 201, "Poll casted successfully");
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+vote.getPoll = asyncHandler(async (req, res) => {
+  const slug = req.params.slug;
+
+  try {
+    const poll = await VoteModel.findOne({ slug });
+
+    if (!poll) {
+      res.status(400);
+      throw new Error("An error occured. It seems like your link is broken.");
+    }
+
+    responseHandle.successResponse(
+      res,
+      201,
+      "The poll has fetched successfully.",
+      poll
+    );
   } catch (error) {
     throw new Error(error);
   }

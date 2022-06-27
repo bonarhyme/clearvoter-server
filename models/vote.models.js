@@ -10,6 +10,10 @@ const partiesSchema = mongoose.Schema({
     type: String,
   },
   voters: [String],
+  voteCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const targetLocationSchema = mongoose.Schema({
