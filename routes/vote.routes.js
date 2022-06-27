@@ -28,5 +28,6 @@ routes.put("/end-poll/:slug", protectUser, protectPoll, vote.endPoll);
 routes.put("/vote/:slug/:selectionId", vote.addVote);
 routes.get("/view-poll/:slug", vote.getPoll);
 routes.get("/view-polls", vote.getPolls);
+routes.get("/view-polls/associated/:username", vote.getAssociatedPolls);
 
 module.exports = routes;

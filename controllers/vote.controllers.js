@@ -285,17 +285,42 @@ vote.getPoll = asyncHandler(async (req, res) => {
 
 vote.getPolls = asyncHandler(async (req, res) => {
   try {
-    const poll = await VoteModel.find({});
+    const poll = await VoteModel.find({ draft: false });
 
-    if (!poll) {
+    if (poll.length === 0) {
       res.status(400);
-      throw new Error("An error occured. It seems like your link is broken.");
+      throw new Error(
+        "An error occured. It seems like your link is broken or polls found."
+      );
     }
 
     responseHandle.successResponse(
       res,
       201,
       "Polls has been fetched successfully.",
+      poll
+    );
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+vote.getAssociatedPolls = asyncHandler(async (req, res) => {
+  const username = req.params.username;
+  try {
+    const poll = await VoteModel.find({ "creator.username": username });
+
+    if (poll.length === 0) {
+      res.status(400);
+      throw new Error(
+        "An error occured. It seems like your link is broken or polls not found."
+      );
+    }
+
+    responseHandle.successResponse(
+      res,
+      201,
+      "Your Polls has been fetched successfully.",
       poll
     );
   } catch (error) {
