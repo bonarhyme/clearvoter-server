@@ -275,7 +275,27 @@ vote.getPoll = asyncHandler(async (req, res) => {
     responseHandle.successResponse(
       res,
       201,
-      "The poll has fetched successfully.",
+      "The poll was fetched successfully.",
+      poll
+    );
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+vote.getPolls = asyncHandler(async (req, res) => {
+  try {
+    const poll = await VoteModel.find({});
+
+    if (!poll) {
+      res.status(400);
+      throw new Error("An error occured. It seems like your link is broken.");
+    }
+
+    responseHandle.successResponse(
+      res,
+      201,
+      "Polls has been fetched successfully.",
       poll
     );
   } catch (error) {
