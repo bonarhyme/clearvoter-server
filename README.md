@@ -8,6 +8,9 @@ ClearVoters also allows users or poll creators decide the requirements for votin
 
 Clear Voter uses a number of APIs to detect if the voter's email, phone number or IP address is valid.
 
+This open-source project was started by [Onuorah Bonaventure Chukwudi](https://bonarhyme.com)
+in reponse to the [Linode](https://www.linode.com/?utm_source=hashnode&utm_medium=article&utm_campaign=hackathon_announcement) and [Hashnode](https://hashnode.com/) June 2022 Hackathon. Contributions are welcome. To contribute visit [server source code](https://github.com/bonarhyme/clearvoter-server) and [web client source code](https://github.com/bonarhyme/clearvoter-web-client).
+
 ## Usage
 
 To get started with ClearVoter, visit [clearvoter.vercel.app](https://clearvoter.vercel.app)
