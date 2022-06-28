@@ -207,9 +207,7 @@ vote.addVote = asyncHandler(async (req, res) => {
     }
 
     // Check voter details
-    const { data } = await axios.get(
-      "https://ipgeolocation.abstractapi.com/v1/?api_key=9b381ad3ef47424d8c935fd3b34a1bab"
-    );
+    const { data } = await axios.get(process.env.ABSTRACT_API);
 
     if (poll.allowVpn === false && data.security.is_vpn === true) {
       res.status(401);
