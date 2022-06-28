@@ -4,7 +4,6 @@ const slugify = require("slugify");
 const partiesSchema = mongoose.Schema({
   name: {
     type: String,
-    unique: true,
   },
   description: {
     type: String,

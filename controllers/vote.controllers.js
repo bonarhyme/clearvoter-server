@@ -186,11 +186,14 @@ vote.addVote = asyncHandler(async (req, res) => {
         $gte: Date.now(),
       },
       endVoting: false,
+      draft: false,
     });
 
     if (!poll) {
       res.status(400);
-      throw new Error("Poll has either expired or has been closed");
+      throw new Error(
+        "You cannot vote now. Poll has either not been published yet or expired or has been closed."
+      );
     }
 
     // Check if party user selected to vote exits
