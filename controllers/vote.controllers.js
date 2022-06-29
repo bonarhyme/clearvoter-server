@@ -209,7 +209,9 @@ vote.addVote = asyncHandler(async (req, res) => {
     }
 
     // Check voter details
-    const { data } = await axios.get(process.env.ABSTRACT_API);
+    const { data } = await axios.get(
+      `${process.env.ABSTRACT_API}&ip_address=${req.ip}`
+    );
 
     if (poll.allowVpn === false && data.security.is_vpn === true) {
       res.status(401);
@@ -220,7 +222,7 @@ vote.addVote = asyncHandler(async (req, res) => {
     if (
       poll.targetLocations.length > 0 &&
       poll.targetLocations.findIndex(
-        (x) => x.location.toLowerCase() === data.country.toLowerCase()
+        (x) => x?.location?.toLowerCase() === data?.country?.toLowerCase()
       ) === -1
     ) {
       res.status(401);
