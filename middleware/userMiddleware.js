@@ -22,15 +22,13 @@ const protectUser = asyncHandler(async (req, res, next) => {
       const user = await userModel
         .findOne({
           username: decoded.fieldToSecure,
-          isVerified: true,
+          // isVerified: true,
         })
         .select("-password");
 
       if (!user) {
         res.status(401);
-        throw new Error(
-          "You are not authorized to use this service yet. Please verify your email first."
-        );
+        throw new Error("You are not authorized to use this service yet. ");
       }
 
       req.user = user;
