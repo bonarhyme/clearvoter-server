@@ -9,7 +9,9 @@ vote.createPoll = asyncHandler(async (req, res) => {
   const { title, description, expiration, allowVpn } = req.body;
 
   try {
-    const isTitleTaken = await VoteModel.findOne({ title: title.trim() });
+    const isTitleTaken = await VoteModel.findOne({
+      title: title.trim(),
+    }).select(["-parties.voters"]);
 
     if (isTitleTaken) {
       res.status(400);
@@ -48,7 +50,7 @@ vote.addParty = asyncHandler(async (req, res) => {
     const checkPartyAdded = await VoteModel.findOne({
       slug,
       "parties.name": name,
-    });
+    }).select(["-parties.voters"]);
 
     if (checkPartyAdded) {
       res.status(400);
@@ -86,7 +88,7 @@ vote.addLocation = asyncHandler(async (req, res) => {
     const checkLocationAdded = await VoteModel.findOne({
       slug,
       "targetLocations.location": location,
-    });
+    }).select(["-parties.voters"]);
 
     if (checkLocationAdded) {
       res.status(400);
@@ -266,7 +268,7 @@ vote.getPoll = asyncHandler(async (req, res) => {
   const slug = req.params.slug;
 
   try {
-    const poll = await VoteModel.findOne({ slug });
+    const poll = await VoteModel.findOne({ slug }).select(["-parties.voters"]);
 
     if (!poll) {
       res.status(400);
@@ -286,7 +288,9 @@ vote.getPoll = asyncHandler(async (req, res) => {
 
 vote.getPolls = asyncHandler(async (req, res) => {
   try {
-    const poll = await VoteModel.find({ draft: false });
+    const poll = await VoteModel.find({ draft: false }).select([
+      "-parties.voters",
+    ]);
 
     if (poll.length === 0) {
       res.status(400);
@@ -309,7 +313,9 @@ vote.getPolls = asyncHandler(async (req, res) => {
 vote.getAssociatedPolls = asyncHandler(async (req, res) => {
   const username = req.params.username;
   try {
-    const poll = await VoteModel.find({ "creator.username": username });
+    const poll = await VoteModel.find({ "creator.username": username }).select([
+      "-parties.voters",
+    ]);
 
     if (poll.length === 0) {
       res.status(400);
