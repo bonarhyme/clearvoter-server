@@ -13,7 +13,7 @@ in reponse to the [Linode](https://www.linode.com/?utm_source=hashnode&utm_mediu
 
 ## Usage
 
-To get started with ClearVoter, visit [clearvoter.vercel.app](https://clearvoter.vercel.app)
+To get started with ClearVoter, visit [clearvoter.xyz](https://clearvoter.xyz) and [https://clearvoter-web-client.vercel.app/](https://clearvoter-web-client.vercel.app/)
 
 ## Contributing
 
